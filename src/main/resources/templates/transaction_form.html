@@ -1,0 +1,95 @@
+<div class="fixed inset-0 flex justify-center items-center bg-secondary/90 dark:bg-darksecondary/90">
+    <div class="border rounded-2xl p-6 w-full max-w-xl
+            bg-secondary dark:bg-darkformbg
+            relative z-10 shadow-xl">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-semibold">
+                Add Transaction
+            </h2>
+            <button class="p-1 border rounded-full
+                   w-12
+                   hover:bg-secondary/50 dark:hover:bg-darksecondary/50
+                   transition" onclick="document.getElementById('transactionFormDiv').innerHTML = ''">
+                <th:block th:replace="~{icons/general.html :: general-close}"></th:block>
+            </button>
+        </div>
+
+        <form id="transactionForm" action="">
+            <div class="grid grid-cols-2 gap-4">
+
+                <!-- Category -->
+                <div class="col-span-2 flex gap-3">
+                    <input id="form-category" name="category" type="text" placeholder="Category" class="flex-1 p-3 rounded-lg
+                              bg-transparent
+                              border border-primary/40
+                              focus:outline-none
+                              focus:border-primary
+                              transition">
+
+                    <button type="button" class="flex items-center justify-center
+                               w-12 rounded-lg
+                               border border-primary/40
+                               hover:border-primary
+                               hover:bg-primary/10
+                               transition" hx-get="/categories" hx-target="#categorySelection" hx-swap="innerHTML">
+                        <th:block th:replace="~{icons/general.html :: general-select}"></th:block>
+                    </button>
+                </div>
+
+                <!-- Sub category -->
+                <input name="subCategory" type="text" placeholder="Sub category" class="col-span-2 p-3 rounded-lg
+                          bg-transparent
+                          border border-primary/40
+                          focus:outline-none
+                          focus:border-primary
+                          focus:ring-2 focus:ring-primary/40
+                          transition">
+
+                <!-- Amount -->
+                <input name="amount" type="text" placeholder="Amount" class="p-3 rounded-lg
+                          bg-transparent
+                          border border-primary/40
+                          focus:outline-none
+                          focus:border-primary
+                          focus:ring-2 focus:ring-primary/40
+                          transition">
+
+                <!-- Date -->
+                <input name="date" type="text" placeholder="Date" class="p-3 rounded-lg
+                          bg-transparent
+                          border border-primary/40
+                          focus:outline-none
+                          focus:border-primary
+                          focus:ring-2 focus:ring-primary/40
+                          transition">
+
+                <!-- Description -->
+                <input name="description" type="text" placeholder="Description" class="col-span-2 p-3 rounded-lg
+                          bg-transparent
+                          border border-primary/40
+                          focus:outline-none
+                          focus:border-primary
+                          focus:ring-2 focus:ring-primary/40
+                          transition">
+
+                <!-- Submit -->
+                <div class="col-span-2 flex justify-center pt-2">
+                    <button type="submit" hx-post="/addTransaction" hx-target="#transactionsList" th:hx-swap="${hxSwap}"
+                        onclick="onSubmitTransactionForm(event)" class="px-6 py-2 rounded-full
+                               bg-accent dark:bg-darkaccent
+                               font-medium
+                               hover:brightness-110
+                               active:scale-[0.98]
+                               transition">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Category overlay -->
+        <div id="categorySelection" class="mt-4 rounded-xl"></div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<script>
+    function selectCategory(el) {
+        document.getElementById("form-category").value = el.dataset.category;
+        document.getElementById("categorySelection").innerHTML = '';
+    }
+    function closeModal(e) {
+        e.preventDefault();
+        document.getElementById("transactionFormDiv").innerHTML = '';
+    }
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const home = document.getElementById("home");
+        const transactions = document.getElementById("transactions");
+        home.classList.add("pressed");
+        home.addEventListener("click", () => {
+            home.classList.add("pressed");
+            transactions.classList.remove("pressed");
+        });
+        transactions.addEventListener("click", () => {
+            transactions.classList.add("pressed");
+            home.classList.remove("pressed");
+        });
+    });
+</script>

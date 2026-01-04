@@ -1,0 +1,26 @@
+<div th:fragment="categorySelection(categories)"
+    class="absolute inset-0 border rounded-2xl bg-secondary dark:bg-darkformbg p-6 z-20">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold">
+            Select Category
+        </h2>
+        <button class="p-1 border rounded-full
+                   w-12
+                   hover:bg-secondary/50 dark:hover:bg-darksecondary/50
+                   transition" onclick="document.getElementById('categorySelection').innerHTML = ''">
+            <th:block th:replace="~{icons/general.html :: general-close}"></th:block>
+        </button>
+    </div>
+
+    <div>
+        <div class="flex flex-row gap-10 flex-wrap items-start">
+            <div class="flex flex-col items-center w-18 h-full overflow-x-hidden text-center cursor-pointer"
+                th:each="category : ${categories}" th:data-category="${category.name}" onclick="selectCategory(this)">
+                <th:block th:replace="~{icons/category.html :: ${category.icon}}"></th:block>
+                <p class="text-sm truncate w-full" th:text="${category.name}"></p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<div th:fragment="transactionList(transactions)" id="transactionsList" th:classappend="${#lists.isEmpty(transactions)} ? '' :
+        'rounded-xl bg-secondary dark:bg-darksecondary p-6'"
+    class="flex flex-col gap-4 text-center justify-center w-full max-w-xl">
+
+    <div id="transactionsRows">
+        <div th:each="transaction : ${transactions}">
+            <th:block th:replace="~{fragments/transaction.html :: transactionRow(${transaction})}"></th:block>
+        </div>
+    </div>
+</div>
