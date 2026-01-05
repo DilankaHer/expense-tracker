@@ -1,5 +1,9 @@
 package com.example.expense_tracker.entity;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import com.example.expense_tracker.dto.TransactionDto;
 
 import jakarta.persistence.Entity;
@@ -19,7 +23,9 @@ public class TransactionEntity {
     private String subCategory;
     private double amount;
     private String description;
-    private String date;
+    private Date date;
+    private String dateString;
+    private String icon;
 
     public TransactionEntity() {
     }
@@ -30,6 +36,8 @@ public class TransactionEntity {
         this.amount = transactionDto.getAmount();
         this.description = transactionDto.getDescription();
         this.date = transactionDto.getDate();
+        this.dateString = makeDateString(transactionDto.getDate());
+        this.icon = transactionDto.getIcon();
     }
 
     public Long getId() {
@@ -72,12 +80,35 @@ public class TransactionEntity {
         this.description = description;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String makeDateString(Date date) {
+        LocalDate localDate = date.toLocalDate();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+        String formattedDate = localDate.format(myFormatObj);
+        return formattedDate;
+    }
+
+    public String getDateString() {
+        return dateString;
+    }
+
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
+    }
+
+    public String getIcon() {
+        return icon;
+    }   
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
 }

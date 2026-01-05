@@ -1,11 +1,12 @@
 <script>
     function selectCategory(el) {
+        console.log(el);
+        const svg = el.querySelector("svg");
+        console.log(svg);
         document.getElementById("form-category").value = el.dataset.category;
+        document.getElementById("form-category-icon").innerHTML = svg.outerHTML;
+        document.getElementById("form-category-icon-value").value = el.dataset.icon;
         document.getElementById("categorySelection").innerHTML = '';
-    }
-    function closeModal(e) {
-        e.preventDefault();
-        document.getElementById("transactionFormDiv").innerHTML = '';
     }
     document.addEventListener('DOMContentLoaded', (event) => {
         const home = document.getElementById("home");

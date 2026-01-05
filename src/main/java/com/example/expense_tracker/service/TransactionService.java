@@ -2,6 +2,7 @@ package com.example.expense_tracker.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,10 @@ public class TransactionService {
     }
 
     @Transactional(readOnly = true)
-    public List<TransactionEntity> getAllTransactions() {
-        return this.transactionRepository.findAll();
+    public List<TransactionEntity> getAllTransactions(String sortBy) {
+        if (sortBy == null) {
+            return this.transactionRepository.findAll();
+        }
+        return this.transactionRepository.findAll(Sort.by(sortBy));
     }
 }
