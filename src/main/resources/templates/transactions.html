@@ -1,11 +1,12 @@
 <div id="transactionsContent" class="flex flex-col gap-4 items-center">
     <div id="transactionFormDiv"></div>
+    <div th:replace="~{fragments/month_year_picker.html :: monthYearPicker}"></div>
     <div id="transactionsList">
         <th:block th:replace="~{fragments/transaction_list.html :: transactionsList(${transactionsByDate})}"></th:block>
     </div>
 
     <div class="flex align-end">
-        <button id="addTransactionButton" type="button" hx-get="/transactionForm" hx-target="#transactionFormDiv"
+        <button id="addTransactionButton" type="button" hx-include="#myp-month, #myp-year" hx-get="/transactionForm" hx-target="#transactionFormDiv"
             hx-swap="innerHTML" class="fixed bottom-10 right-10 w-14 h-14 rounded-full
          bg-secondary hover:bg-secondary/80 dark:bg-darksecondary hover:dark:bg-darksecondary/80
          flex items-center justify-center

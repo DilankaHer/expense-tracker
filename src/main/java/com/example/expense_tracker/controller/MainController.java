@@ -1,5 +1,7 @@
 package com.example.expense_tracker.controller;
 
+import java.time.YearMonth;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,11 +20,11 @@ import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.TransactionService;
 
 @Controller
-public class HelloController {
+public class MainController {
     private final TransactionService transactionService;
     private final CategoryService categoryService;
 
-    public HelloController(TransactionService transactionService, CategoryService categoryService) {
+    public MainController(TransactionService transactionService, CategoryService categoryService) {
         this.transactionService = transactionService;
         this.categoryService = categoryService;
     }
@@ -40,7 +42,7 @@ public class HelloController {
                 model.addAttribute("transactionsByDate", null);
             } else {
                 Map<String, List<TransactionEntity>> transactionsByDate = transactions.stream()
-                    .collect(Collectors.groupingBy(TransactionEntity::getDateString));
+                    .collect(Collectors.groupingBy(TransactionEntity::getDateString, LinkedHashMap::new, Collectors.toList()));
                 model.addAttribute("transactionsByDate", transactionsByDate);
             }
             return "transactions";
@@ -49,10 +51,10 @@ public class HelloController {
     }
 
     @GetMapping("/transactionForm")
-    public String transactionForm(Model model) {
-        // List<CategoryEntity> categories = this.categoryService.getAllCategories();
-        // System.out.println(categories);
-        // model.addAttribute("categories", categories);
+    public String transactionForm(@RequestParam Integer month, @RequestParam Integer year, Model model) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        model.addAttribute("minDate", yearMonth.atDay(1));
+        model.addAttribute("maxDate", yearMonth.atEndOfMonth());
         return "transaction_form";
     }
 
@@ -61,7 +63,7 @@ public class HelloController {
         this.transactionService.addTransaction(transactionDto);
         List<TransactionEntity> transactions = this.transactionService.getAllTransactions("date");
         Map<String, List<TransactionEntity>> transactionsByDate = transactions.stream()
-            .collect(Collectors.groupingBy(TransactionEntity::getDateString));
+            .collect(Collectors.groupingBy(TransactionEntity::getDateString, LinkedHashMap::new, Collectors.toList()));
         model.addAttribute("transactionsByDate", transactionsByDate);
         return "fragments/transaction_list :: transactionsList";
     }

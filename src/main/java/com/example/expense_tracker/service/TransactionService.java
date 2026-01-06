@@ -29,6 +29,6 @@ public class TransactionService {
         if (sortBy == null) {
             return this.transactionRepository.findAll();
         }
-        return this.transactionRepository.findAll(Sort.by(sortBy));
+        return this.transactionRepository.findAll(Sort.by(Sort.Direction.DESC, sortBy));
     }
 }

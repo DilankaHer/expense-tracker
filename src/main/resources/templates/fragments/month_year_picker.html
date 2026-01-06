@@ -1,0 +1,22 @@
+<div th:fragment="monthYearPicker" class="max-w-sm mx-auto">
+  <div class="flex items-center justify-between gap-6">
+
+    <button id="myp-prev"
+      class="p-2 rounded-full hover:bg-gray-100 transition">
+      ‹
+    </button>
+
+    <div class="text-center w-40">
+      <div id="myp-month-year" class="text-xl font-semibold"></div>
+      <input type="hidden" name="month" id="myp-month" value="">
+      <input type="hidden" name="year" id="myp-year" value="">
+    </div>
+
+    <button id="myp-next"
+      class="p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-30"
+      disabled>
+      ›
+    </button>
+
+  </div>
+</div>

@@ -20,5 +20,39 @@
             transactions.classList.add("pressed");
             home.classList.remove("pressed");
         });
+
+        document.addEventListener("htmx:afterSwap", (el) => {
+            if (el.detail.pathInfo.finalRequestPath == "/tab?tab=transactions") {
+                const currentDate = new Date()
+                let month = currentDate.toLocaleString('default', { month: 'short' })
+                let year = currentDate.toLocaleString('default', { year: 'numeric' })
+                let offset = 0
+                function updateMonthYear(action) {
+                   action == "prev" ? offset -= 1 : offset += 1
+                   const date = new Date()
+                   date.setMonth(date.getMonth() + offset)
+                   month = date.toLocaleString('default', { month: 'short' })
+                   year = date.toLocaleString('default', { year: 'numeric' })
+                   document.getElementById("myp-month-year").innerHTML = month + ", " + year
+                   document.getElementById("myp-month").value = date.getMonth() + 1
+                   document.getElementById("myp-year").value = date.getFullYear()
+                }
+                document.getElementById("myp-month-year").innerHTML = month + ", " + year
+                document.getElementById("myp-month").value = currentDate.getMonth() + 1
+                document.getElementById("myp-year").value = currentDate.getFullYear()
+
+                document.getElementById("myp-prev").addEventListener("click", () => {
+                    updateMonthYear("prev")
+                    document.getElementById("myp-next").removeAttribute("disabled")
+                })
+        
+                document.getElementById("myp-next").addEventListener("click", () => {
+                    updateMonthYear("next")
+                    if (offset == 0) {
+                        document.getElementById("myp-next").setAttribute("disabled", "disabled")
+                    }
+                })
+            }
+        })
     });
 </script>
