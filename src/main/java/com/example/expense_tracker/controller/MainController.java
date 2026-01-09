@@ -1,5 +1,6 @@
 package com.example.expense_tracker.controller;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,11 +10,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.expense_tracker.dto.TransactionDto;
 import com.example.expense_tracker.entity.CategoryEntity;
 import com.example.expense_tracker.entity.TransactionEntity;
 import com.example.expense_tracker.service.CategoryService;
@@ -37,7 +35,8 @@ public class MainController {
     @GetMapping("/tab")
     public String home(@RequestParam String tab, Model model) {
         if (tab.equals("transactions")) {
-            List<TransactionEntity> transactions = this.transactionService.getAllTransactions("date");
+            YearMonth yearMonth = YearMonth.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue());
+            List<TransactionEntity> transactions = this.transactionService.getAllTransactions("date", yearMonth);
             if (transactions.isEmpty()) {
                 model.addAttribute("transactionsByDate", null);
             } else {
@@ -50,28 +49,17 @@ public class MainController {
         return "home";
     }
 
-    @GetMapping("/transactionForm")
-    public String transactionForm(@RequestParam Integer month, @RequestParam Integer year, Model model) {
-        YearMonth yearMonth = YearMonth.of(year, month);
-        model.addAttribute("minDate", yearMonth.atDay(1));
-        model.addAttribute("maxDate", yearMonth.atEndOfMonth());
-        return "transaction_form";
-    }
-
-    @PostMapping("/addTransaction")
-    public String addTransaction(@ModelAttribute TransactionDto transactionDto, Model model) {
-        this.transactionService.addTransaction(transactionDto);
-        List<TransactionEntity> transactions = this.transactionService.getAllTransactions("date");
-        Map<String, List<TransactionEntity>> transactionsByDate = transactions.stream()
-            .collect(Collectors.groupingBy(TransactionEntity::getDateString, LinkedHashMap::new, Collectors.toList()));
-        model.addAttribute("transactionsByDate", transactionsByDate);
-        return "fragments/transaction_list :: transactionsList";
-    }
-
     @GetMapping("/categories")
     public String categories(Model model) {
         List<CategoryEntity> categories = this.categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         return "fragments/selection_menu :: categorySelection";
+    }
+
+    @GetMapping("/subCategories")
+    public String subCategories(Model model) {
+        List<CategoryEntity> subCategories = this.categoryService.getAllSubCategories();
+        model.addAttribute("subCategories", subCategories);
+        return "fragments/selection_menu :: subCategorySelection";
     }
 }

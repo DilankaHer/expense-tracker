@@ -17,6 +17,7 @@ public class CategoryEntity {
 
     private String name;
     private String icon;
+    private String catType;
 
     public CategoryEntity() {
     }
@@ -24,6 +25,7 @@ public class CategoryEntity {
     public CategoryEntity(CategoryDto categoryDto) {
         this.name = categoryDto.getName();
         this.icon = categoryDto.getIcon();
+        this.catType = categoryDto.getCatType();
     }
 
     public Long getId() {
@@ -48,5 +50,13 @@ public class CategoryEntity {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getCatType() {
+        return catType;
+    }
+
+    public void setCatType(String catType) {
+        this.catType = catType;
     }
 }

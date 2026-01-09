@@ -1,8 +1,8 @@
 <div th:fragment="monthYearPicker" class="max-w-sm mx-auto">
   <div class="flex items-center justify-between gap-6">
 
-    <button id="myp-prev"
-      class="p-2 rounded-full hover:bg-gray-100 transition">
+    <button id="myp-prev" hx-include="#myp-month, #myp-year" hx-get="/transactions" hx-target="#transactionsList"
+      hx-swap="innerHTML" class="p-2 rounded-full hover:bg-gray-100 transition">
       ‹
     </button>
 
@@ -12,9 +12,8 @@
       <input type="hidden" name="year" id="myp-year" value="">
     </div>
 
-    <button id="myp-next"
-      class="p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-30"
-      disabled>
+    <button id="myp-next" hx-include="#myp-month, #myp-year" hx-get="/transactions" hx-target="#transactionsList"
+      hx-swap="innerHTML" class="p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-30" disabled>
       ›
     </button>
 

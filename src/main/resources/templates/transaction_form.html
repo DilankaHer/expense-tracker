@@ -44,13 +44,29 @@
                 </div>
 
                 <!-- Sub category -->
-                <input name="subCategory" type="text" placeholder="Sub category" class="col-span-2 p-3 rounded-lg
-                          bg-transparent
-                          border border-primary/40
-                          focus:outline-none
-                          focus:border-primary
-                          focus:ring-2 focus:ring-primary/40
-                          transition">
+                <div class="col-span-2 flex gap-3">
+                    <div class="flex items-center border border-primary/40 rounded-lg w-full">
+                        <input id="form-subCategory-icon-value" name="icon" type="hidden">
+                        <span id="form-subCategory-icon" class="w-12">
+                            <th:block th:replace="~{icons/sub_category.html :: sub-category-others}"></th:block>
+                        </span>
+                        <input id="form-subCategory" name="subCategory" type="text" placeholder="Sub Category" class="flex-1 p-3
+                              bg-transparent
+                              border-l border-primary/40
+                              focus:outline-none
+                              focus:border-primary
+                              transition">
+                    </div>
+                    <button type="button" class="flex items-center justify-center
+                               w-12 rounded-lg
+                               border border-primary/40
+                               hover:border-primary
+                               hover:bg-primary/10
+                               transition" hx-get="/subCategories" hx-target="#subCategorySelection"
+                        hx-swap="innerHTML">
+                        <th:block th:replace="~{icons/general.html :: general-select}"></th:block>
+                    </button>
+                </div>
 
                 <!-- Amount -->
                 <input name="amount" type="text" placeholder="Amount" class="p-3 rounded-lg
@@ -62,12 +78,7 @@
                           transition">
 
                 <!-- Date -->
-                <input
-                    name="date"
-                    type="date"
-                    th:min="${minDate}"
-                    th:max="${maxDate}"
-                    class="p-3 rounded-lg
+                <input name="date" type="date" th:min="${minDate}" th:max="${maxDate}" class="p-3 rounded-lg
                           bg-transparent
                           border border-primary/40
                           focus:outline-none
@@ -86,9 +97,9 @@
 
                 <!-- Submit -->
                 <div class="col-span-2 flex justify-center pt-2">
-                    <button type="submit" hx-post="/addTransaction" hx-target="#transactionsList" hx-swap="innerHTML" 
-                        hx-on::after-request="document.getElementById('transactionFormDiv').innerHTML = ''"
-                        class="px-6 py-2 rounded-full
+                    <button type="submit" hx-post="/addTransaction" hx-include="#myp-month, #myp-year"
+                        hx-target="#transactionsList" hx-swap="innerHTML"
+                        hx-on::after-request="document.getElementById('transactionFormDiv').innerHTML = ''" class="px-6 py-2 rounded-full
                         bg-accent dark:bg-darkaccent
                         font-medium
                         hover:brightness-110
@@ -102,5 +113,6 @@
 
         <!-- Category overlay -->
         <div id="categorySelection" class="mt-4 rounded-xl p-2"></div>
+        <div id="subCategorySelection" class="mt-4 rounded-xl p-2"></div>
     </div>
 </div>

@@ -25,6 +25,11 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<CategoryEntity> getAllCategories() {
-        return this.categoryRepository.findAll();
+        return this.categoryRepository.findAllByCatType("1");
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryEntity> getAllSubCategories() {
+        return this.categoryRepository.findAllByCatType("2");
     }
 }

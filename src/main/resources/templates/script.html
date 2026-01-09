@@ -8,6 +8,15 @@
         document.getElementById("form-category-icon-value").value = el.dataset.icon;
         document.getElementById("categorySelection").innerHTML = '';
     }
+    function selectSubCategory(el) {
+        console.log(el);
+        const svg = el.querySelector("svg");
+        console.log(svg);
+        document.getElementById("form-subCategory").value = el.dataset.subcategory;
+        document.getElementById("form-subCategory-icon").innerHTML = svg.outerHTML;
+        document.getElementById("form-subCategory-icon-value").value = el.dataset.icon;
+        document.getElementById("subCategorySelection").innerHTML = '';
+    }
     document.addEventListener('DOMContentLoaded', (event) => {
         const home = document.getElementById("home");
         const transactions = document.getElementById("transactions");
@@ -28,14 +37,14 @@
                 let year = currentDate.toLocaleString('default', { year: 'numeric' })
                 let offset = 0
                 function updateMonthYear(action) {
-                   action == "prev" ? offset -= 1 : offset += 1
-                   const date = new Date()
-                   date.setMonth(date.getMonth() + offset)
-                   month = date.toLocaleString('default', { month: 'short' })
-                   year = date.toLocaleString('default', { year: 'numeric' })
-                   document.getElementById("myp-month-year").innerHTML = month + ", " + year
-                   document.getElementById("myp-month").value = date.getMonth() + 1
-                   document.getElementById("myp-year").value = date.getFullYear()
+                    action == "prev" ? offset -= 1 : offset += 1
+                    const date = new Date()
+                    date.setMonth(date.getMonth() + offset)
+                    month = date.toLocaleString('default', { month: 'short' })
+                    year = date.toLocaleString('default', { year: 'numeric' })
+                    document.getElementById("myp-month-year").innerHTML = month + ", " + year
+                    document.getElementById("myp-month").value = date.getMonth() + 1
+                    document.getElementById("myp-year").value = date.getFullYear()
                 }
                 document.getElementById("myp-month-year").innerHTML = month + ", " + year
                 document.getElementById("myp-month").value = currentDate.getMonth() + 1
@@ -45,7 +54,7 @@
                     updateMonthYear("prev")
                     document.getElementById("myp-next").removeAttribute("disabled")
                 })
-        
+
                 document.getElementById("myp-next").addEventListener("click", () => {
                     updateMonthYear("next")
                     if (offset == 0) {
