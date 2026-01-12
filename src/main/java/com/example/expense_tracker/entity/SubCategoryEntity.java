@@ -1,14 +1,19 @@
 package com.example.expense_tracker.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "category")
-public class CategoryEntity {
+@Table(name = "sub_category")
+public class SubCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,12 +21,18 @@ public class CategoryEntity {
     private String name;
     private String icon;
 
-    public CategoryEntity() {
+    @ManyToOne
+    @JoinColumn(name = "categoryName", referencedColumnName = "name")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private CategoryEntity category;
+
+    public SubCategoryEntity() {
     }
 
-    public CategoryEntity(String name, String icon) {
+    public SubCategoryEntity(String name, String icon, CategoryEntity category) {
         this.name = name;
         this.icon = icon;
+        this.category = category;
     }
 
     public Long getId() {
@@ -46,5 +57,13 @@ public class CategoryEntity {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public CategoryEntity getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryEntity category) {
+        this.category = category;
     }
 }

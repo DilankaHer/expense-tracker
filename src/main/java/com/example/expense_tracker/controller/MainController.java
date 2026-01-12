@@ -13,18 +13,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.expense_tracker.entity.CategoryEntity;
+import com.example.expense_tracker.entity.SubCategoryEntity;
 import com.example.expense_tracker.entity.TransactionEntity;
 import com.example.expense_tracker.service.CategoryService;
+import com.example.expense_tracker.service.SubCategoryService;
 import com.example.expense_tracker.service.TransactionService;
 
 @Controller
 public class MainController {
     private final TransactionService transactionService;
     private final CategoryService categoryService;
+    private final SubCategoryService subCategoryService;
 
-    public MainController(TransactionService transactionService, CategoryService categoryService) {
+    public MainController(TransactionService transactionService, CategoryService categoryService, SubCategoryService subCategoryService) {
         this.transactionService = transactionService;
         this.categoryService = categoryService;
+        this.subCategoryService = subCategoryService;
     }
 
     @GetMapping("/")
@@ -57,9 +61,16 @@ public class MainController {
     }
 
     @GetMapping("/subCategories")
-    public String subCategories(Model model) {
-        List<CategoryEntity> subCategories = this.categoryService.getAllSubCategories();
+    public String subCategories(@RequestParam String category, Model model) {
+        List<SubCategoryEntity> subCategories = this.subCategoryService.getSubCategoriesByCategoryName(category);
         model.addAttribute("subCategories", subCategories);
         return "fragments/selection_menu :: subCategorySelection";
+    }
+
+    @GetMapping("/category") 
+    public String category(Model model, @RequestParam String name, @RequestParam String icon) {
+        CategoryEntity category = new CategoryEntity(name, icon);
+        model.addAttribute("category", category);
+        return "fragments/selection_menu :: categorySelectionSingle";
     }
 }

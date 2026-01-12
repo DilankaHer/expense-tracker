@@ -22,11 +22,12 @@
                 <!-- Category -->
                 <div class="col-span-2 flex gap-3">
                     <div class="flex items-center border border-primary/40 rounded-lg w-full">
-                        <input id="form-category-icon-value" name="icon" type="hidden">
+                        <input id="form-category-icon-value" value="category-others" name="icon" type="hidden">
                         <span id="form-category-icon" class="w-12">
                             <th:block th:replace="~{icons/category.html :: category-others}"></th:block>
                         </span>
-                        <input id="form-category" name="category" type="text" placeholder="Category" class="flex-1 p-3
+                        <input id="form-category" name="category" type="text" placeholder="Category"
+                            oninput="handleCategoryChange(this)" class="flex-1 p-3
                               bg-transparent
                               border-l border-primary/40
                               focus:outline-none
@@ -46,7 +47,7 @@
                 <!-- Sub category -->
                 <div class="col-span-2 flex gap-3">
                     <div class="flex items-center border border-primary/40 rounded-lg w-full">
-                        <input id="form-subCategory-icon-value" name="icon" type="hidden">
+                        <input id="form-subCategory-icon-value" type="hidden">
                         <span id="form-subCategory-icon" class="w-12">
                             <th:block th:replace="~{icons/sub_category.html :: sub-category-others}"></th:block>
                         </span>
@@ -62,8 +63,8 @@
                                border border-primary/40
                                hover:border-primary
                                hover:bg-primary/10
-                               transition" hx-get="/subCategories" hx-target="#subCategorySelection"
-                        hx-swap="innerHTML">
+                               transition" hx-get="/subCategories" hx-include="#form-category"
+                        hx-target="#subCategorySelection" hx-swap="innerHTML">
                         <th:block th:replace="~{icons/general.html :: general-select}"></th:block>
                     </button>
                 </div>

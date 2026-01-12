@@ -3,7 +3,7 @@
         th:each="instance : ${transactionsByDate}">
         <div class="font-semibold text-lg mb-2" th:text="${instance.key}"></div>
         <div class="w-full flex justify-center">
-            <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+            <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                 <div th:each="transaction : ${instance.value}">
                     <div th:fragment="transactionRow(transaction)" class="rounded-2xl bg-secondary dark:bg-darksecondary

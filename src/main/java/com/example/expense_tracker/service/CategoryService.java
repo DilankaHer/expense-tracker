@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.expense_tracker.dto.CategoryDto;
 import com.example.expense_tracker.entity.CategoryEntity;
 import com.example.expense_tracker.repository.CategoryRepository;
 
@@ -18,18 +17,22 @@ public class CategoryService {
     }
 
     @Transactional
-    public void addCategory(CategoryDto categoryDto) {
-        CategoryEntity entity = new CategoryEntity(categoryDto);
-        this.categoryRepository.save(entity);
+    public void addCategory(CategoryEntity categoryEntity) {
+        this.categoryRepository.save(categoryEntity);
     }
 
     @Transactional(readOnly = true)
     public List<CategoryEntity> getAllCategories() {
-        return this.categoryRepository.findAllByCatType("1");
+        return this.categoryRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryEntity> getAllSubCategories() {
-        return this.categoryRepository.findAllByCatType("2");
+    public CategoryEntity getCategoryByName(String name) {
+        return this.categoryRepository.findByName(name);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryEntity> getAllCategoriesOrderByOthersLast() {
+        return this.categoryRepository.findAllOrderByOthersLast();
     }
 }

@@ -14,15 +14,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.expense_tracker.dto.TransactionDto;
+import com.example.expense_tracker.entity.CategoryEntity;
+import com.example.expense_tracker.entity.SubCategoryEntity;
 import com.example.expense_tracker.entity.TransactionEntity;
+import com.example.expense_tracker.service.CategoryService;
+import com.example.expense_tracker.service.SubCategoryService;
 import com.example.expense_tracker.service.TransactionService;
 
 @Controller
 public class TransactionController {
     private final TransactionService transactionService;
+    private final SubCategoryService subCategoryService;
+    private final CategoryService categoryService;
 
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(TransactionService transactionService, SubCategoryService subCategoryService, CategoryService categoryService) {
         this.transactionService = transactionService;
+        this.subCategoryService = subCategoryService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/transactions")
@@ -42,7 +50,25 @@ public class TransactionController {
 
     @PostMapping("/addTransaction")
     public String addTransaction(@ModelAttribute TransactionDto transactionDto, @RequestParam Integer month, @RequestParam Integer year, Model model) {
+
+        CategoryEntity category = categoryService.getCategoryByName(transactionDto.getCategory());
+
+        if (category == null) {
+            CategoryEntity categoryEntity = new CategoryEntity(transactionDto.getCategory(), "category-others");
+            categoryService.addCategory(categoryEntity);
+        }
+
+        if (transactionDto.getSubCategory() != null) {
+            SubCategoryEntity subCategory = subCategoryService.getSubCategoryByNameAndCategoryName(transactionDto.getSubCategory(), transactionDto.getCategory());
+
+            if (subCategory == null) {
+                SubCategoryEntity subCategoryEntity = new SubCategoryEntity(transactionDto.getSubCategory(), "sub-category-others", categoryService.getCategoryByName(transactionDto.getCategory()));
+                subCategoryService.addSubCategory(subCategoryEntity);
+            }
+        }
+
         this.transactionService.addTransaction(transactionDto);
+
         Map<String, List<TransactionEntity>> transactionsByDate = getTransactionsByDate(YearMonth.of(year, month));
         model.addAttribute("transactionsByDate", transactionsByDate);
         return "fragments/transaction_list :: transactionsList";

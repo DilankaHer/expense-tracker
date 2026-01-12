@@ -9,14 +9,16 @@ public class TransactionDto {
     private Date date;
     private String description;
     private String icon;
+    private String iconSubCategory;
 
-    public TransactionDto(String category, String subCategory, double amount, Date date, String description, String icon) {
+    public TransactionDto(String category, String subCategory, double amount, Date date, String description, String icon, String iconSubCategory) {
         this.category = category;
         this.subCategory = subCategory;
         this.amount = amount;
         this.date = date;
         this.description = description;
         this.icon = icon;
+        this.iconSubCategory = iconSubCategory;
     }
 
     public String getCategory() {
@@ -65,5 +67,13 @@ public class TransactionDto {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getIconSubCategory() {
+        return iconSubCategory;
+    }
+
+    public void setIconSubCategory(String iconSubCategory) {
+        this.iconSubCategory = iconSubCategory;
     }
 }
