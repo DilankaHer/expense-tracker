@@ -14,5 +14,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
         LocalDate start,
         LocalDate end,
         Sort sort
-);
+    );
+
+    List<TransactionEntity> findAllByDate(LocalDate date, Sort sort);
 }

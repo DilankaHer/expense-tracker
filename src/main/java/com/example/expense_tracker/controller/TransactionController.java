@@ -1,13 +1,16 @@
 package com.example.expense_tracker.controller;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +51,15 @@ public class TransactionController {
         return "transaction_form";
     }
 
+    @GetMapping("/transactionFormEdit")
+    public String transactionFormEdit(@RequestParam Long id, Model model) {
+        Optional<TransactionEntity> transaction = this.transactionService.getTransactionById(id);
+        System.out.println("Innnnnnnnnn");
+        System.out.println(transaction);
+        model.addAttribute("transaction", transaction);
+        return "transaction_form_edit :: transactionFormEdit";
+    }
+
     @PostMapping("/addTransaction")
     public String addTransaction(@ModelAttribute TransactionDto transactionDto, @RequestParam Integer month, @RequestParam Integer year, Model model) {
 
@@ -72,6 +84,36 @@ public class TransactionController {
         Map<String, List<TransactionEntity>> transactionsByDate = getTransactionsByDate(YearMonth.of(year, month));
         model.addAttribute("transactionsByDate", transactionsByDate);
         return "fragments/transaction_list :: transactionsList";
+    }
+
+    @PostMapping("/editTransaction")
+    public String editTransaction(@ModelAttribute TransactionEntity transactionEntity, Model model) {
+        this.transactionService.updateTransaction(transactionEntity);
+
+        model.addAttribute("transaction", transactionEntity);
+        return "fragments/transaction_list :: transactionRow";
+    }
+
+    @DeleteMapping("/deleteTransaction")
+    public String deleteTransaction(@RequestParam Long id, @RequestParam String date, Model model) {
+        LocalDate localDate = LocalDate.parse(date);
+        this.transactionService.deleteTransaction(id);
+        List<TransactionEntity> transactionsByDate = this.transactionService.getTransactionsByDate(localDate);
+
+        if (!transactionsByDate.isEmpty()) {
+            String key = transactionsByDate.get(0).getDateString();
+            model.addAttribute("key", key);
+            model.addAttribute("value", transactionsByDate);
+            return "fragments/transaction_list :: transactionsPerDate";
+        }
+
+        List<TransactionEntity> transactions = this.transactionService.getAllTransactions("date", YearMonth.of(localDate.getYear(), localDate.getMonth()));
+
+        if (transactions.isEmpty()) {
+            return "fragments/empty :: noTransactions";
+        }
+
+        return "fragments/empty :: empty"; 
     }
 
     private Map<String, List<TransactionEntity>> getTransactionsByDate(YearMonth yearMonth) {

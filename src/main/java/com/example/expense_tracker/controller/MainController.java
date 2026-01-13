@@ -46,6 +46,8 @@ public class MainController {
             } else {
                 Map<String, List<TransactionEntity>> transactionsByDate = transactions.stream()
                     .collect(Collectors.groupingBy(TransactionEntity::getDateString, LinkedHashMap::new, Collectors.toList()));
+                System.out.println("Innnn");
+                System.out.println(transactionsByDate);
                 model.addAttribute("transactionsByDate", transactionsByDate);
             }
             return "transactions";

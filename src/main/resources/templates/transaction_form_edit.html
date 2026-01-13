@@ -1,0 +1,122 @@
+<div th:fragment="transactionFormEdit(transaction)"
+    class="fixed inset-0 flex justify-center items-center bg-secondary/90 dark:bg-darksecondary/90">
+    <div class="border rounded-2xl p-6 w-full max-w-xl
+            bg-secondary dark:bg-darkformbg
+            relative z-10 shadow-xl">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-semibold">
+                Edit Transaction
+            </h2>
+            <button class="p-1 border rounded-full
+                   w-12
+                   hover:bg-secondary/50 dark:hover:bg-darksecondary/50
+                   transition" onclick="document.getElementById('transactionFormDiv').innerHTML = ''">
+                <th:block th:replace="~{icons/general.html :: general-close}"></th:block>
+            </button>
+        </div>
+
+        <form id="transactionForm" action="">
+            <div class="grid grid-cols-2 gap-4">
+
+                <!-- Category -->
+                <div class="col-span-2 flex gap-3">
+                    <div class="flex items-center border border-primary/40 rounded-lg w-full">
+                        <input id="form-category-icon-value" th:value="${transaction.icon}" name="icon" type="hidden">
+                        <span id="form-category-icon" class="w-12">
+                            <th:block th:replace="~{icons/category.html :: ${transaction.icon}}"></th:block>
+                        </span>
+                        <input id="form-category" name="category" type="text" placeholder="Category"
+                            th:value="${transaction.category}" oninput="handleCategoryChange(this)" class="flex-1 p-3
+                              bg-transparent
+                              border-l border-primary/40
+                              focus:outline-none
+                              focus:border-primary
+                              transition">
+                    </div>
+                    <button type="button" class="flex items-center justify-center
+                               w-12 rounded-lg
+                               border border-primary/40
+                               hover:border-primary
+                               hover:bg-primary/10
+                               transition" hx-get="/categories" hx-target="#categorySelection" hx-swap="innerHTML">
+                        <th:block th:replace="~{icons/general.html :: general-select}"></th:block>
+                    </button>
+                </div>
+
+                <!-- Sub category -->
+                <div class="col-span-2 flex gap-3">
+                    <div class="flex items-center border border-primary/40 rounded-lg w-full">
+                        <input id="form-subCategory-icon-value" type="hidden">
+                        <span id="form-subCategory-icon" class="w-12">
+                            <th:block th:replace="~{icons/sub_category.html :: sub-category-others}"></th:block>
+                        </span>
+                        <input id="form-subCategory" name="subCategory" type="text" placeholder="Sub Category"
+                            th:value="${transaction.subCategory}" class="flex-1 p-3
+                              bg-transparent
+                              border-l border-primary/40
+                              focus:outline-none
+                              focus:border-primary
+                              transition">
+                    </div>
+                    <button type="button" class="flex items-center justify-center
+                               w-12 rounded-lg
+                               border border-primary/40
+                               hover:border-primary
+                               hover:bg-primary/10
+                               transition" hx-get="/subCategories" hx-include="#form-category"
+                        hx-target="#subCategorySelection" hx-swap="innerHTML">
+                        <th:block th:replace="~{icons/general.html :: general-select}"></th:block>
+                    </button>
+                </div>
+
+                <!-- Amount -->
+                <input name="amount" type="text" placeholder="Amount" th:value="${transaction.amount}" class="p-3 rounded-lg
+                          bg-transparent
+                          border border-primary/40
+                          focus:outline-none
+                          focus:border-primary
+                          focus:ring-2 focus:ring-primary/40
+                          transition">
+
+                <!-- Date -->
+                <!-- <input name="date" type="date" th:min="${minDate}" th:max="${maxDate}" class="p-3 rounded-lg
+                          bg-transparent
+                          border border-primary/40
+                          focus:outline-none
+                          focus:border-primary
+                          focus:ring-2 focus:ring-primary/40
+                          transition"> -->
+
+                <!-- Description -->
+                <input name="description" type="text" placeholder="Description" th:value="${transaction.description}"
+                    class="col-span-2 p-3 rounded-lg
+                          bg-transparent
+                          border border-primary/40
+                          focus:outline-none
+                          focus:border-primary
+                          focus:ring-2 focus:ring-primary/40
+                          transition">
+
+                <!-- Submit -->
+                <div class="col-span-2 flex justify-center pt-2">
+                    <button type="submit" hx-post="/editTransaction" th:hx-target="'transaction-' + ${transaction.id}"
+                        hx-swap="innerHTML"
+                        hx-on::after-request="document.getElementById('transactionFormDiv').innerHTML = ''" class="px-6 py-2 rounded-full
+                        bg-accent dark:bg-darkaccent
+                        font-medium
+                        hover:brightness-110
+                        active:scale-[0.98]
+                        transition">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Category overlay -->
+        <div id="categorySelection" class="mt-4 rounded-xl p-2"></div>
+        <div id="subCategorySelection" class="mt-4 rounded-xl p-2"></div>
+    </div>
+</div>

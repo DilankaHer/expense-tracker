@@ -1,0 +1,6 @@
+<div th:fragment="empty"></div>
+
+<div th:fragment="noTransactions" th:if="${#maps.isEmpty(transactionsByDate)}"
+    class="flex flex-col gap-4 text-center justify-center">
+    <p>No transactions found</p>
+</div>

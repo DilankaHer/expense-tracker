@@ -1,44 +1,64 @@
 <div th:fragment="transactionsList(transactionsByDate)">
-    <div th:classappend="${#maps.isEmpty(transactionsByDate)} ? '' : 'flex flex-col items-start gap-2 mb-6'"
-        th:each="instance : ${transactionsByDate}">
-        <div class="font-semibold text-lg mb-2" th:text="${instance.key}"></div>
-        <div class="w-full flex justify-center">
-            <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div th:classappend="${#maps.isEmpty(transactionsByDate)} ? '' : 'flex flex-col items-start gap-2 mb-6'">
 
-                <div th:each="transaction : ${instance.value}">
-                    <div th:fragment="transactionRow(transaction)" class="rounded-2xl bg-secondary dark:bg-darksecondary
-                        border border-border/40
-                        px-6 py-5
-                        hover:shadow-md transition">
-
-                        <div class="flex items-center gap-4">
-
-                            <!-- Icon -->
-                            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-                                <th:block th:replace="~{icons/category.html :: ${transaction.icon}}"></th:block>
-                            </div>
-
-                            <!-- Sub-category -->
-                            <div class="flex-1">
-                                <p class="font-medium text-base" th:text="${transaction.subCategory}">
-                                </p>
-                            </div>
-
-                            <!-- Amount -->
-                            <div class="text-right min-w-[120px]">
-                                <p class="font-semibold text-lg" th:text="${transaction.amount}">
-                                </p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+        <div th:each="instance : ${transactionsByDate}" th:id="'transaction-' + ${instance.value[0].date}">
+            <div th:replace="~{::transactionsPerDate(key=${instance.key}, value=${instance.value})}"></div>
         </div>
 
+        <div th:if="${#maps.isEmpty(transactionsByDate)}" class="flex flex-col gap-4 text-center justify-center">
+            <p>No transactions found</p>
+        </div>
     </div>
-    <div th:if="${#maps.isEmpty(transactionsByDate)}" class="flex flex-col gap-4 text-center justify-center">
-        <p>No transactions found</p>
+</div>
+
+<div th:fragment="transactionsPerDate(key, value)">
+    <div class="font-semibold text-lg mb-2" th:text="${key}"></div>
+
+    <div class="w-full flex justify-center">
+        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <div th:each="transaction : ${value}">
+                <div th:replace="~{::transactionRow(transaction=${transaction})}"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:fragment="transactionRow(transaction)" th:id="'transaction-' + ${transaction.id}" class="rounded-2xl bg-secondary dark:bg-darksecondary
+                                border border-border/40
+                                px-6 py-5
+                                hover:shadow-md transition" th:hx-get="@{/transactionFormEdit(id=${transaction.id})}"
+    hx-target="#transactionFormDiv" hx-swap="innerHTML">
+
+    <div class="flex items-center gap-4">
+
+        <!-- Icon -->
+        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+            <th:block th:replace="~{icons/category.html :: ${transaction.icon}}"></th:block>
+        </div>
+
+        <!-- Sub-category -->
+        <div class="flex-1">
+            <p class="font-medium text-base" th:text="${transaction.subCategory}"></p>
+        </div>
+
+        <!-- Amount -->
+        <div class="text-right min-w-[120px]">
+            <p class="font-semibold text-lg" th:text="${transaction.amount}"></p>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-3 ml-4">
+
+            <!-- Delete -->
+            <button type="button" class="p-2 rounded-lg hover:bg-red-500/10 text-red-600 transition w-15"
+                th:hx-delete="@{/deleteTransaction(id=${transaction.id}, date=${transaction.date})}"
+                th:hx-target="'#transaction-' + ${transaction.date}" hx-swap="innerHTML" title="Delete">
+                <th:block th:replace="~{icons/general.html :: general-trash}"></th:block>
+            </button>
+
+        </div>
+
     </div>
 </div>

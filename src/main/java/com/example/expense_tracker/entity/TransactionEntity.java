@@ -111,4 +111,14 @@ public class TransactionEntity {
         this.icon = icon;
     }
 
+    @Override
+    public String toString() {
+        return "TransactionEntity{" +
+                "id=" + id +
+                ", date=" + date +
+                ", amount=" + amount +
+                ", icon=" + icon +
+                ", subCategory='" + subCategory + '\'' +
+                '}';
+    }
 }
