@@ -3,6 +3,7 @@ package com.example.expense_tracker.entity;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import com.example.expense_tracker.dto.TransactionDto;
 
@@ -90,7 +91,7 @@ public class TransactionEntity {
 
     public String makeDateString(Date date) {
         LocalDate localDate = date.toLocalDate();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy", Locale.ENGLISH);
         String formattedDate = localDate.format(myFormatObj);
         return formattedDate;
     }

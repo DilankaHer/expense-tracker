@@ -68,6 +68,8 @@ public class TransactionService {
         tx.setCategory(transactionEntity.getCategory());
         tx.setSubCategory(transactionEntity.getSubCategory());
         tx.setDescription(transactionEntity.getDescription());
-        tx.setAmount(transactionEntity.getAmount());
+        tx.setIcon(transactionEntity.getIcon());
+        tx.setDate(transactionEntity.getDate());
+        tx.setDateString(tx.makeDateString(transactionEntity.getDate()));
     }
 }

@@ -5,7 +5,6 @@ import java.time.YearMonth;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
@@ -53,9 +52,12 @@ public class TransactionController {
 
     @GetMapping("/transactionFormEdit")
     public String transactionFormEdit(@RequestParam Long id, Model model) {
-        Optional<TransactionEntity> transaction = this.transactionService.getTransactionById(id);
-        System.out.println("Innnnnnnnnn");
-        System.out.println(transaction);
+        TransactionEntity transaction = this.transactionService.getTransactionById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Transaction not found for id " + id));
+
+        YearMonth yearMonth = YearMonth.from(transaction.getDate().toLocalDate());
+        model.addAttribute("minDate", yearMonth.atDay(1));
+        model.addAttribute("maxDate", yearMonth.atEndOfMonth());
         model.addAttribute("transaction", transaction);
         return "transaction_form_edit :: transactionFormEdit";
     }
@@ -87,11 +89,28 @@ public class TransactionController {
     }
 
     @PostMapping("/editTransaction")
-    public String editTransaction(@ModelAttribute TransactionEntity transactionEntity, Model model) {
+    public String editTransaction(@ModelAttribute TransactionEntity transactionEntity, @RequestParam Integer month, @RequestParam Integer year, Model model) {
+        CategoryEntity category = categoryService.getCategoryByName(transactionEntity.getCategory());
+
+        if (category == null) {
+            CategoryEntity categoryEntity = new CategoryEntity(transactionEntity.getCategory(), transactionEntity.getIcon());
+            categoryService.addCategory(categoryEntity);
+        }
+
+        if (transactionEntity.getSubCategory() != null && !transactionEntity.getSubCategory().isBlank()) {
+            SubCategoryEntity subCategory = subCategoryService.getSubCategoryByNameAndCategoryName(transactionEntity.getSubCategory(), transactionEntity.getCategory());
+
+            if (subCategory == null) {
+                SubCategoryEntity subCategoryEntity = new SubCategoryEntity(transactionEntity.getSubCategory(), "sub-category-others", categoryService.getCategoryByName(transactionEntity.getCategory()));
+                subCategoryService.addSubCategory(subCategoryEntity);
+            }
+        }
+
         this.transactionService.updateTransaction(transactionEntity);
 
-        model.addAttribute("transaction", transactionEntity);
-        return "fragments/transaction_list :: transactionRow";
+        Map<String, List<TransactionEntity>> transactionsByDate = getTransactionsByDate(YearMonth.of(year, month));
+        model.addAttribute("transactionsByDate", transactionsByDate);
+        return "fragments/transaction_list :: transactionsList";
     }
 
     @DeleteMapping("/deleteTransaction")

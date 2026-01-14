@@ -18,6 +18,7 @@
         </div>
 
         <form id="transactionForm" action="">
+            <input type="hidden" name="id" th:value="${transaction.id}">
             <div class="grid grid-cols-2 gap-4">
 
                 <!-- Category -->
@@ -81,13 +82,14 @@
                           transition">
 
                 <!-- Date -->
-                <!-- <input name="date" type="date" th:min="${minDate}" th:max="${maxDate}" class="p-3 rounded-lg
+                <input name="date" type="date" th:min="${minDate}" th:max="${maxDate}" th:value="${transaction.date}"
+                    class="p-3 rounded-lg
                           bg-transparent
                           border border-primary/40
                           focus:outline-none
                           focus:border-primary
                           focus:ring-2 focus:ring-primary/40
-                          transition"> -->
+                          transition">
 
                 <!-- Description -->
                 <input name="description" type="text" placeholder="Description" th:value="${transaction.description}"
@@ -101,7 +103,7 @@
 
                 <!-- Submit -->
                 <div class="col-span-2 flex justify-center pt-2">
-                    <button type="submit" hx-post="/editTransaction" th:hx-target="'transaction-' + ${transaction.id}"
+                    <button type="submit" hx-post="/editTransaction" hx-include="#myp-month, #myp-year" hx-target="#transactionsList"
                         hx-swap="innerHTML"
                         hx-on::after-request="document.getElementById('transactionFormDiv').innerHTML = ''" class="px-6 py-2 rounded-full
                         bg-accent dark:bg-darkaccent
