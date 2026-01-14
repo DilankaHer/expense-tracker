@@ -84,6 +84,85 @@
                     }
                 })
             }
+            // Reinitialize popover handlers after HTMX swaps
+            initializePopoverHandlers();
         })
+
+        // Intercept htmx:confirm to show custom dialog
+        document.body.addEventListener('htmx:confirm', function (e) {
+            console.log("sdasds", e);
+            if (e.detail.question) { // Check if hx-confirm attribute is present
+                e.preventDefault(); // Prevent the default htmx request
+                Swal.fire({
+                    title: 'Confirm Action',
+                    text: e.detail.question, // Use the value from hx-confirm
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Delete',
+                    background: '#2f314a',
+                    color: '#f5f5f5',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        e.detail.issueRequest(true); // Manually issue the request, skipping default confirm
+                    }
+                });
+            }
+        });
     });
+
+    // Popover functionality
+    let currentPopover = null;
+    let popoverClickHandler = null;
+
+    function showDescriptionPopover(event, element) {
+        event.stopPropagation();
+
+        // Get popover ID from data attribute
+        const popoverId = element.getAttribute('data-popover-id');
+        if (!popoverId) return;
+
+        const popover = document.getElementById(popoverId);
+        if (!popover) return;
+
+        // Close any existing popover
+        if (currentPopover && currentPopover !== popover) {
+            currentPopover.classList.add('hidden');
+        }
+
+        // Toggle current popover
+        if (popover.classList.contains('hidden')) {
+            popover.classList.remove('hidden');
+            currentPopover = popover;
+        } else {
+            popover.classList.add('hidden');
+            currentPopover = null;
+        }
+    }
+
+    function initializePopoverHandlers() {
+        // Remove existing click handler if any
+        if (popoverClickHandler) {
+            document.removeEventListener('click', popoverClickHandler);
+        }
+
+        // Close popover when clicking outside
+        popoverClickHandler = function (event) {
+            if (currentPopover) {
+                const isClickInsidePopover = currentPopover.contains(event.target);
+                const isClickOnTrigger = event.target.closest('[data-popover-id]') !== null;
+
+                if (!isClickInsidePopover && !isClickOnTrigger) {
+                    currentPopover.classList.add('hidden');
+                    currentPopover = null;
+                }
+            }
+        };
+
+        document.addEventListener('click', popoverClickHandler);
+    }
+
+    // Initialize on page load
+    initializePopoverHandlers();
 </script>

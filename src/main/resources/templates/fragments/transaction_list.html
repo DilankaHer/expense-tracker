@@ -11,54 +11,154 @@
     </div>
 </div>
 
-<div th:fragment="transactionsPerDate(key, value)">
-    <div class="font-semibold text-lg mb-2" th:text="${key}"></div>
+<div th:fragment="transactionsPerDate(key, value)" class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+        <div class="font-semibold text-lg" th:text="${key}"></div>
+        <div class="font-semibold text-lg">
+            Total: <span class="text-primary dark:text-primary" th:text="${#numbers.formatDecimal(#aggregates.sum(value.![amount]), 1, 2)}"></span>
+        </div>
+    </div>
 
     <div class="w-full flex justify-center">
-        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-            <div th:each="transaction : ${value}">
-                <div th:replace="~{::transactionRow(transaction=${transaction})}"></div>
+        <!-- Compact list view for lg and above -->
+        <div class="w-full max-w-6xl hidden lg:block overflow-visible">
+            <div class="flex flex-col gap-0 w-full">
+                <div th:each="transaction : ${value}" class="w-full overflow-visible">
+                    <div th:replace="~{::transactionRowList(transaction=${transaction})}"></div>
+                </div>
             </div>
+        </div>
 
+        <!-- Card view for md and below -->
+        <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-3 lg:hidden">
+            <div th:each="transaction : ${value}">
+                <div th:replace="~{::transactionRowCard(transaction=${transaction})}"></div>
+            </div>
         </div>
     </div>
 </div>
 
-<div th:fragment="transactionRow(transaction)" th:id="'transaction-' + ${transaction.id}" class="rounded-2xl bg-secondary dark:bg-darksecondary
-                                border border-border/40
-                                px-6 py-5
-                                hover:shadow-md transition" th:hx-get="@{/transactionFormEdit(id=${transaction.id})}"
-    hx-target="#transactionFormDiv" hx-swap="innerHTML">
+<!-- Compact list row for lg+ screens -->
+<div th:fragment="transactionRowList(transaction)" th:id="'transaction-list-' + ${transaction.id}"
+    class="border-b border-border/40 px-4 py-3 hover:bg-secondary/50 dark:hover:bg-darksecondary/50 transition min-h-[56px] flex items-center w-full relative">
 
-    <div class="flex items-center gap-4">
-
+    <div class="flex items-center gap-3 w-full min-w-0">
         <!-- Icon -->
-        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 flex-shrink-0">
             <th:block th:replace="~{icons/category.html :: ${transaction.icon}}"></th:block>
         </div>
 
         <!-- Sub-category -->
-        <div class="flex-1">
-            <p class="font-medium text-base" th:text="${transaction.subCategory}"></p>
+        <div class="flex-1 min-w-0 overflow-hidden">
+            <p class="font-medium text-base truncate" th:text="${transaction.subCategory}"></p>
+        </div>
+
+        <!-- Description (always reserve space, show only if exists) -->
+        <div class="w-64 max-w-xs min-w-0 relative flex-shrink-0 z-50">
+            <div th:if="${transaction.description != null and !transaction.description.isEmpty()}">
+                <p class="text-sm text-gray-600 dark:text-gray-400 truncate cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 transition"
+                    th:text="${transaction.description}" th:data-popover-id="'desc-popover-' + ${transaction.id}"
+                    onclick="showDescriptionPopover(event, this)">
+                </p>
+                <!-- Popover for description -->
+                <div class="hidden absolute left-0 top-full mt-1 z-[9999] max-w-xs w-auto min-w-[200px] p-3 rounded-lg bg-secondary dark:bg-darksecondary border border-border/40 shadow-xl isolate"
+                    th:id="'desc-popover-' + ${transaction.id}" style="isolation: isolate;">
+                    <p class="text-sm whitespace-normal break-words" th:text="${transaction.description}"></p>
+                </div>
+            </div>
         </div>
 
         <!-- Amount -->
-        <div class="text-right min-w-[120px]">
+        <div class="text-right w-[120px] flex-shrink-0">
             <p class="font-semibold text-lg" th:text="${transaction.amount}"></p>
         </div>
 
         <!-- Actions -->
-        <div class="flex items-center gap-3 ml-4" onclick="event.stopPropagation()">
-
-            <!-- Delete -->
-            <button type="button" class="p-2 rounded-lg hover:bg-red-500/10 text-red-600 transition w-15"
-                th:hx-delete="@{/deleteTransaction(id=${transaction.id}, date=${transaction.date})}"
-                th:hx-target="'#transaction-' + ${transaction.date}" hx-swap="innerHTML" title="Delete">
-                <th:block th:replace="~{icons/general.html :: general-trash}"></th:block>
+        <div class="flex items-center gap-2 flex-shrink-0" onclick="event.stopPropagation()">
+            <!-- Edit -->
+            <button type="button"
+                class="p-1.5 rounded-lg hover:bg-primary/10 text-primary dark:text-primary transition w-10 h-10 flex items-center justify-center"
+                th:hx-get="@{/transactionFormEdit(id=${transaction.id})}" hx-target="#transactionFormDiv"
+                hx-swap="innerHTML" title="Edit">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" class="w-5 h-5">
+                    <path
+                        d="M100.4 417.2C104.5 402.6 112.2 389.3 123 378.5L304.2 197.3L338.1 163.4C354.7 180 389.4 214.7 442.1 267.4L476 301.3L442.1 335.2L260.9 516.4C250.2 527.1 236.8 534.9 222.2 539L94.4 574.6C86.1 576.9 77.1 574.6 71 568.4C64.9 562.2 62.6 553.3 64.9 545L100.4 417.2zM156 413.5C151.6 418.2 148.4 423.9 146.7 430.1L122.6 517L209.5 492.9C215.9 491.1 221.7 487.8 226.5 483.2L155.9 413.5zM510 267.4C493.4 250.8 458.7 216.1 406 163.4L372 129.5C398.5 103 413.4 88.1 416.9 84.6C430.4 71 448.8 63.4 468 63.4C487.2 63.4 505.6 71 519.1 84.6L554.8 120.3C568.4 133.9 576 152.3 576 171.4C576 190.5 568.4 209 554.8 222.5C551.3 226 536.4 240.9 509.9 267.4z" />
+                </svg>
             </button>
+            <!-- Delete -->
+            <button type="button"
+                class="p-1.5 rounded-lg hover:bg-red-500/10 text-red-600 dark:text-red-500 transition w-10 h-10 flex items-center justify-center"
+                th:hx-delete="@{/deleteTransaction(id=${transaction.id}, date=${transaction.date})}"
+                th:hx-target="'#transaction-' + ${transaction.date}"
+                hx-swap="innerHTML"
+                hx-confirm="Are you sure you want to delete this transaction?"
+                th:data-transaction-id="${transaction.id}"
+                th:data-transaction-date="${transaction.date}"
+                title="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" class="w-5 h-5">
+                    <path
+                        d="M232.7 69.9L224 96L128 96C110.3 96 96 110.3 96 128C96 145.7 110.3 160 128 160L512 160C529.7 160 544 145.7 544 128C544 110.3 529.7 96 512 96L416 96L407.3 69.9C402.9 56.8 390.7 48 376.9 48L263.1 48C249.3 48 237.1 56.8 232.7 69.9zM512 208L128 208L149.1 531.1C150.7 556.4 171.7 576 197 576L443 576C468.3 576 489.3 556.4 490.9 531.1L512 208z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
 
+<!-- Card row for md- screens -->
+<div th:fragment="transactionRowCard(transaction)" th:id="'transaction-card-' + ${transaction.id}"
+    class="text-sm rounded-xl bg-secondary dark:bg-darksecondary border border-border/40 px-2 py-2 hover:shadow-md transition relative cursor-pointer overflow-visible"
+    th:hx-get="@{/transactionFormEdit(id=${transaction.id})}" hx-target="#transactionFormDiv" hx-swap="innerHTML">
+
+    <div class="flex items-center gap-2 w-full min-w-0">
+        <!-- Icon -->
+        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 flex-shrink-0">
+            <th:block th:replace="~{icons/category.html :: ${transaction.icon}}"></th:block>
         </div>
 
+        <!-- Sub-category -->
+        <div class="w-24 min-w-0 flex-shrink-0">
+            <p class="font-medium truncate" th:text="${transaction.subCategory}"></p>
+        </div>
+
+        <!-- Amount -->
+        <div class="w-20 min-w-0 flex-shrink-0 text-right mr-4">
+            <p class="font-semibold truncate" th:text="${transaction.amount}"></p>
+        </div>
+
+        <div class="flex items-center gap-1 flex-shrink-0 w-8">
+            <div class="relative flex items-center w-8"
+                th:classappend="${transaction.description != null and !transaction.description.isEmpty() ? '' : 'invisible'}"
+                onclick="event.stopPropagation()">
+                <button type="button" class="w-8 relative z-10"
+                    th:data-popover-id="'desc-popover-card-' + ${transaction.id}"
+                    onclick="showDescriptionPopover(event, this)"
+                    title="View description">
+                    <th:block th:replace="~{icons/general.html :: general-notes}"></th:block>
+                </button>
+                <!-- Popover for description -->
+                <div th:if="${transaction.description != null and !transaction.description.isEmpty()}"
+                    class="hidden absolute right-0 top-full mt-1 z-[10000] min-w-[200px] max-w-xs w-auto p-3 rounded-lg bg-secondary dark:bg-darksecondary border border-border/40 shadow-xl"
+                    th:id="'desc-popover-card-' + ${transaction.id}"
+                    style="position: absolute; z-index: 10001 !important;">
+                    <p class="text-sm whitespace-normal break-words w-full" th:text="${transaction.description}"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center flex-shrink-0" onclick="event.stopPropagation()">
+            <!-- Delete -->
+            <button type="button" class="text-red-600 w-8"
+                th:hx-delete="@{/deleteTransaction(id=${transaction.id}, date=${transaction.date})}"
+                th:hx-target="'#transaction-' + ${transaction.date}"
+                hx-swap="innerHTML"
+                hx-confirm="Are you sure you want to delete this transaction?"
+                th:data-transaction-id="${transaction.id}"
+                th:data-transaction-date="${transaction.date}"
+                title="Delete">
+                <th:block th:replace="~{icons/general.html :: general-trash}"></th:block>
+            </button>
+        </div>
     </div>
+</div>
 </div>

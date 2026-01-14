@@ -1,33 +1,33 @@
-<div class="fixed inset-0 flex justify-center items-center bg-secondary/90 dark:bg-darksecondary/90">
-    <div class="border rounded-2xl p-6 w-full max-w-xl
+<div class="fixed inset-0 flex justify-center items-center bg-secondary/90 dark:bg-darksecondary/90 z-[200]">
+    <div class="border rounded-2xl p-6 md:p-3 lg:p-6 w-full max-w-xl md:max-w-sm lg:max-w-xl
             bg-secondary dark:bg-darkformbg
-            relative z-10 shadow-xl">
+            relative z-[201] shadow-xl md:text-sm lg:text-base">
 
         <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-semibold">
+        <div class="flex items-center justify-between mb-6 md:mb-3 lg:mb-6">
+            <h2 class="text-xl md:text-base lg:text-xl font-semibold">
                 Add Transaction
             </h2>
             <button class="p-1 border rounded-full
-                   w-12
+                   w-12 md:w-7 md:h-7 lg:w-12 lg:h-12
                    hover:bg-secondary/50 dark:hover:bg-darksecondary/50
-                   transition" onclick="document.getElementById('transactionFormDiv').innerHTML = ''">
+                   transition flex items-center justify-center" onclick="document.getElementById('transactionFormDiv').innerHTML = ''">
                 <th:block th:replace="~{icons/general.html :: general-close}"></th:block>
             </button>
         </div>
 
         <form id="transactionForm" action="">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-4 md:gap-2 lg:gap-4">
 
                 <!-- Category -->
-                <div class="col-span-2 flex gap-3">
+                <div class="col-span-2 flex gap-3 md:gap-1.5 lg:gap-3">
                     <div class="flex items-center border border-primary/40 rounded-lg w-full">
                         <input id="form-category-icon-value" value="category-others" name="icon" type="hidden">
-                        <span id="form-category-icon" class="w-12">
+                        <span id="form-category-icon" class="w-12 md:w-6 lg:w-12 flex items-center justify-center">
                             <th:block th:replace="~{icons/category.html :: category-others}"></th:block>
                         </span>
                         <input id="form-category" name="category" type="text" placeholder="Category"
-                            oninput="handleCategoryChange(this)" class="flex-1 p-3
+                            oninput="handleCategoryChange(this)" class="flex-1 p-3 md:p-1.5 lg:p-3 md:text-sm lg:text-base
                               bg-transparent
                               border-l border-primary/40
                               focus:outline-none
@@ -35,7 +35,7 @@
                               transition">
                     </div>
                     <button type="button" class="flex items-center justify-center
-                               w-12 rounded-lg
+                               w-12 md:w-7 lg:w-12 rounded-lg
                                border border-primary/40
                                hover:border-primary
                                hover:bg-primary/10
@@ -45,13 +45,13 @@
                 </div>
 
                 <!-- Sub category -->
-                <div class="col-span-2 flex gap-3">
+                <div class="col-span-2 flex gap-3 md:gap-1.5 lg:gap-3">
                     <div class="flex items-center border border-primary/40 rounded-lg w-full">
                         <input id="form-subCategory-icon-value" type="hidden">
-                        <span id="form-subCategory-icon" class="w-12">
+                        <span id="form-subCategory-icon" class="w-12 md:w-6 lg:w-12 flex items-center justify-center">
                             <th:block th:replace="~{icons/sub_category.html :: sub-category-others}"></th:block>
                         </span>
-                        <input id="form-subCategory" name="subCategory" type="text" placeholder="Sub Category" class="flex-1 p-3
+                        <input id="form-subCategory" name="subCategory" type="text" placeholder="Sub Category" class="flex-1 p-3 md:p-1.5 lg:p-3 md:text-sm lg:text-base
                               bg-transparent
                               border-l border-primary/40
                               focus:outline-none
@@ -59,7 +59,7 @@
                               transition">
                     </div>
                     <button type="button" class="flex items-center justify-center
-                               w-12 rounded-lg
+                               w-12 md:w-7 lg:w-12 rounded-lg
                                border border-primary/40
                                hover:border-primary
                                hover:bg-primary/10
@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Amount -->
-                <input name="amount" type="text" placeholder="Amount" class="p-3 rounded-lg
+                <input name="amount" type="text" placeholder="Amount" class="p-3 md:p-1.5 lg:p-3 md:text-sm lg:text-base rounded-lg
                           bg-transparent
                           border border-primary/40
                           focus:outline-none
@@ -79,7 +79,7 @@
                           transition">
 
                 <!-- Date -->
-                <input name="date" type="date" th:min="${minDate}" th:max="${maxDate}" class="p-3 rounded-lg
+                <input name="date" type="date" th:min="${minDate}" th:max="${maxDate}" class="p-3 md:p-1.5 lg:p-3 md:text-sm lg:text-base rounded-lg
                           bg-transparent
                           border border-primary/40
                           focus:outline-none
@@ -88,7 +88,7 @@
                           transition">
 
                 <!-- Description -->
-                <input name="description" type="text" placeholder="Description" class="col-span-2 p-3 rounded-lg
+                <input name="description" type="text" placeholder="Description" class="col-span-2 p-3 md:p-1.5 lg:p-3 md:text-sm lg:text-base rounded-lg
                           bg-transparent
                           border border-primary/40
                           focus:outline-none
@@ -100,7 +100,7 @@
                 <div class="col-span-2 flex justify-center pt-2">
                     <button type="submit" hx-post="/addTransaction" hx-include="#myp-month, #myp-year"
                         hx-target="#transactionsList" hx-swap="innerHTML"
-                        hx-on::after-request="document.getElementById('transactionFormDiv').innerHTML = ''" class="px-6 py-2 rounded-full
+                        hx-on::after-request="document.getElementById('transactionFormDiv').innerHTML = ''" class="px-6 md:px-3 lg:px-6 py-2 md:py-1 lg:py-2 md:text-sm lg:text-base rounded-full
                         bg-accent dark:bg-darkaccent
                         font-medium
                         hover:brightness-110
