@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between gap-6">
 
     <button id="myp-prev" hx-include="#myp-month, #myp-year" hx-get="/transactions" hx-target="#transactionsList"
-      hx-swap="innerHTML" class="p-2 rounded-full hover:bg-gray-100 transition">
+      hx-swap="innerHTML" class="p-2 rounded-full hover:bg-gray-100 transition font-bold text-xl">
       ‹
     </button>
 
@@ -13,7 +13,7 @@
     </div>
 
     <button id="myp-next" hx-include="#myp-month, #myp-year" hx-get="/transactions" hx-target="#transactionsList"
-      hx-swap="innerHTML" class="p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-30" disabled>
+      hx-swap="innerHTML" class="p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-30 font-bold text-xl" disabled>
       ›
     </button>
 

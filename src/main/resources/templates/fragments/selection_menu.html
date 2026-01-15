@@ -1,5 +1,5 @@
 <div th:fragment="categorySelection(categories)"
-    class="absolute inset-0 border rounded-2xl bg-secondary dark:bg-darkformbg p-6 md:p-3 lg:p-6 z-20 md:text-sm lg:text-base">
+    class="absolute inset-0 border rounded-none md:rounded-none lg:rounded-2xl bg-secondary dark:bg-darkformbg p-6 md:p-3 lg:p-6 z-20 md:text-sm lg:text-base">
 
     <!-- Header -->
     <div class="flex items-center justify-between mb-6 md:mb-3 lg:mb-6">
@@ -14,8 +14,8 @@
         </button>
     </div>
 
-    <div>
-        <div class="flex flex-row gap-10 md:gap-4 lg:gap-10 flex-wrap items-start">
+    <div class="overflow-y-auto max-h-[calc(100%-120px)] md:max-h-[calc(100%-80px)] lg:max-h-[calc(100%-120px)]">
+        <div class="flex flex-row gap-10 md:gap-4 lg:gap-10 flex-wrap items-center justify-start">
             <div class="flex flex-col items-center w-18 md:w-12 lg:w-18 h-full overflow-x-hidden text-center cursor-pointer"
                 th:each="category : ${categories}" th:data-category="${category.name}" th:data-icon="${category.icon}"
                 onclick="selectCategory(this)">
@@ -29,7 +29,7 @@
 </div>
 
 <div th:fragment="subCategorySelection(subCategories)"
-    class="absolute inset-0 border rounded-2xl bg-secondary dark:bg-darkformbg p-6 md:p-3 lg:p-6 z-30 md:text-sm lg:text-base">
+    class="absolute inset-0 border rounded-none md:rounded-none lg:rounded-2xl bg-secondary dark:bg-darkformbg p-6 md:p-3 lg:p-6 z-30 md:text-sm lg:text-base">
 
     <!-- Header -->
     <div class="flex items-center justify-between mb-6 md:mb-3 lg:mb-6">
@@ -44,11 +44,11 @@
         </button>
     </div>
 
-    <div>
+    <div class="overflow-y-auto max-h-[calc(100%-120px)] md:max-h-[calc(100%-80px)] lg:max-h-[calc(100%-120px)]">
         <div th:if="${#lists.isEmpty(subCategories)}" class="flex flex-col text-center justify-center">
             <p class="md:text-sm lg:text-base">No sub categories found</p>
         </div>
-        <div th:if="${not #lists.isEmpty(subCategories)}" class="flex flex-row gap-10 md:gap-4 lg:gap-10 flex-wrap items-start">
+        <div th:if="${not #lists.isEmpty(subCategories)}" class="flex flex-row gap-10 md:gap-4 lg:gap-10 flex-wrap items-center justify-start">
             <div class="flex flex-col items-center w-18 md:w-12 lg:w-18 h-full overflow-x-hidden text-center cursor-pointer"
                 th:each="subCategory : ${subCategories}" th:data-subCategory="${subCategory.name}"
                 th:data-icon="${subCategory.icon}" onclick="selectSubCategory(this)">

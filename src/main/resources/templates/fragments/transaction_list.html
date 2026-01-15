@@ -1,5 +1,5 @@
 <div th:fragment="transactionsList(transactionsByDate)">
-    <div th:classappend="${#maps.isEmpty(transactionsByDate)} ? '' : 'flex flex-col items-start gap-2 mb-6'">
+    <div th:classappend="${#maps.isEmpty(transactionsByDate)} ? '' : 'flex flex-col items-start gap-2 mb-6 mt-6'">
 
         <div th:each="instance : ${transactionsByDate}" th:id="'transaction-' + ${instance.value[0].date}">
             <div th:replace="~{::transactionsPerDate(key=${instance.key}, value=${instance.value})}"></div>
