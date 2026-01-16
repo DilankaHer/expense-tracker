@@ -1,0 +1,119 @@
+<div th:fragment="budgetDisplay(budget)"
+     class="flex flex-col gap-4 items-center justify-center w-full">
+
+    <div class="w-full mb-4 flex justify-center">
+        <form th:hx-post="${budget.path}"
+              hx-target="#budgetDisplay"
+              hx-swap="innerHTML"
+              hx-include="#myp-month, #myp-year"
+              hx-on::after-request="this.reset()"
+              class="flex items-center gap-3 flex-wrap">
+            
+            <input name="amount" type="number" step="0.01" placeholder="Budget" required
+                   class="px-4 py-2 rounded-lg bg-transparent border border-primary/40 
+                          focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/40
+                          transition">
+                        
+            <div th:if="${budget.path == '/updateBudget'}">
+                <input type="hidden" name="id" th:value="${budget.id}">
+            </div>
+
+            <button type="submit"
+                    class="px-4 py-2 rounded-lg bg-secondary dark:bg-darksecondary
+                           hover:bg-secondary/80 dark:hover:bg-darksecondary/80 
+                           transition duration-200 ease-in-out font-medium whitespace-nowrap">
+                <span th:text="${budget.path == '/addBudget' ? 'Add' : 'Update'}"></span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Budget List -->
+    <div id="budgetInfo" class="w-full">
+        <!-- For lg and above: Show all info without icon -->
+        <div class="hidden lg:block">
+            <div th:if="${budget.amount == 0}" class="flex justify-center items-center h-full">
+                <p>No budget found</p>
+            </div>
+            <div th:if="${budget.amount != 0}" class="flex flex-col gap-3">
+                <div class="border-b border-border/40 pb-2 mb-2">
+                    <div class="grid grid-cols-6 gap-4 text-sm font-semibold text-gray-600 dark:text-gray-400">
+                        <div class="text-right">Budget</div>
+                        <div class="text-right">Expenses</div>
+                        <div class="text-right">Remaining</div>
+                        <div class="text-right">Used %</div>
+                        <div class="text-right">Daily spend</div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <!-- Budget Row - lg screens -->
+                    <div class="border-b border-border/40 px-4 py-3 hover:bg-secondary/50 dark:hover:bg-darksecondary/50 transition">
+                        <div class="grid grid-cols-6 gap-4 items-center">
+                            <div class="text-right"><span th:text="${budget.amount}"></span></div>
+                            <div class="text-right"><span th:text="${budget.expenses}"></span></div>
+                            <div class="text-right"><span th:text="${budget.remaining}"></span></div>
+                            <div class="text-right"><span th:text="${budget.percentage}"></span></div>
+                            <div class="text-right"><span th:text="${budget.dailySpend}"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- For md and below: Show compact view with info icon -->
+        <div class="lg:hidden">
+            <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-2">
+                    <div th:if="${budget.amount == 0}" class="flex justify-center items-center h-full">
+                        <p>No budget found</p>
+                    </div>
+                    <!-- Budget Row - md and below -->
+                    <div th:if="${budget.amount != 0}" class="rounded-xl bg-secondary dark:bg-darksecondary border border-border/40 px-4 py-3 hover:shadow-md transition">
+                        <div class="flex items-center justify-between gap-4">
+                                <div class="flex items-center gap-4 text-sm">
+                                    <div>
+                                        <span class="text-gray-600 dark:text-gray-400">Budget: </span>
+                                        <span class="font-semibold" th:text="${budget.amount}"></span>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-600 dark:text-gray-400">Expenses: </span>
+                                        <span class="font-semibold" th:text="${budget.expenses}"></span>
+                                    </div>
+                                </div>
+                            <div class="flex-shrink-0 relative" onclick="event.stopPropagation()">
+                                <button type="button" 
+                                    class="w-9 flex items-center justify-center rounded-lg hover:bg-primary/10 text-primary dark:text-primary transition"
+                                    data-popover-id="budget-info-1"
+                                    onclick="showDescriptionPopover(event, this)"
+                                    title="Budget Information">
+                                    <th:block th:replace="~{icons/general.html :: general-info}"></th:block>
+                                </button>
+                                <!-- Popover for budget info -->
+                                <div class="hidden absolute right-0 top-full mt-1 z-[10000] min-w-[200px] max-w-xs w-auto p-3 rounded-lg bg-secondary dark:bg-darksecondary border border-border/40 shadow-xl"
+                                    id="budget-info-1"
+                                    style="position: absolute; z-index: 10001 !important;">
+                                    <div class="flex flex-col gap-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Remaining:</span>
+                                            <span class="font-semibold" th:text="${budget.remaining}"></span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Used %:</span>
+                                            <span class="font-semibold" th:text="${budget.percentage}"></span>
+                                        </div>
+                                        <!-- <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-400">Daily spend:</span>
+                                            <span class="font-semibold" th:text="${budget.dailySpend}"></span>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-start items-start">
+                    <div th:if="${budget.dailySpend != 'N/A'}" class="text-sm text-gray-600 dark:text-gray-400">You can spend up to <span th:text="${budget.dailySpend}"></span> per day.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

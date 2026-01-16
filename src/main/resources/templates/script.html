@@ -1,5 +1,15 @@
 <script>
     let categories = [];
+    const currentDate = new Date()
+    let month;
+    let year;
+    let offset;
+    let mypMonthYear;
+    let mypMonth;
+    let mypYear;
+    let mypNext;
+    let mypPrev;
+
     async function handleCategoryChange(el) {
         if (categories.length == 0) {
             await fetch("/categoriesJSON").then(res => res.json()).then(data => {
@@ -39,6 +49,40 @@
         document.getElementById("form-subCategory-icon-value").value = el.dataset.icon;
         document.getElementById("subCategorySelection").innerHTML = '';
     }
+    function initializeMonthYearPicker() {
+        offset = 0
+        month = currentDate.toLocaleString('default', { month: 'short' })
+        year = currentDate.toLocaleString('default', { year: 'numeric' })
+        mypMonthYear = document.getElementById("myp-month-year");
+        mypMonth = document.getElementById("myp-month");
+        mypYear = document.getElementById("myp-year");
+        mypNext = document.getElementById("myp-next");
+        mypPrev = document.getElementById("myp-prev");
+        mypMonthYear.innerHTML = month + ", " + year
+        mypMonth.value = currentDate.getMonth() + 1
+        mypYear.value = currentDate.getFullYear()
+    }
+    function prev() {
+        updateMonthYear("prev")
+        mypNext.removeAttribute("disabled")
+    }
+    function next() {
+        updateMonthYear("next")
+        if (offset == 0) {
+            mypNext.setAttribute("disabled", "disabled")
+        }
+    }
+    function updateMonthYear(action) {
+        action == "prev" ? offset -= 1 : offset += 1
+        const date = new Date()
+        date.setMonth(date.getMonth() + offset)
+        month = date.toLocaleString('default', { month: 'short' })
+        year = date.toLocaleString('default', { year: 'numeric' })
+        mypMonthYear.innerHTML = month + ", " + year
+        mypMonth.value = date.getMonth() + 1
+        mypYear.value = date.getFullYear()
+    }
+
     document.addEventListener('DOMContentLoaded', (event) => {
         const home = document.getElementById("home");
         const transactions = document.getElementById("transactions");
@@ -52,37 +96,13 @@
             home.classList.remove("pressed");
         });
 
+        initializeMonthYearPicker();
+
         document.addEventListener("htmx:afterSwap", (el) => {
             if (el.detail.pathInfo.finalRequestPath == "/tab?tab=transactions") {
-                const currentDate = new Date()
-                let month = currentDate.toLocaleString('default', { month: 'short' })
-                let year = currentDate.toLocaleString('default', { year: 'numeric' })
-                let offset = 0
-                function updateMonthYear(action) {
-                    action == "prev" ? offset -= 1 : offset += 1
-                    const date = new Date()
-                    date.setMonth(date.getMonth() + offset)
-                    month = date.toLocaleString('default', { month: 'short' })
-                    year = date.toLocaleString('default', { year: 'numeric' })
-                    document.getElementById("myp-month-year").innerHTML = month + ", " + year
-                    document.getElementById("myp-month").value = date.getMonth() + 1
-                    document.getElementById("myp-year").value = date.getFullYear()
-                }
-                document.getElementById("myp-month-year").innerHTML = month + ", " + year
-                document.getElementById("myp-month").value = currentDate.getMonth() + 1
-                document.getElementById("myp-year").value = currentDate.getFullYear()
-
-                document.getElementById("myp-prev").addEventListener("click", () => {
-                    updateMonthYear("prev")
-                    document.getElementById("myp-next").removeAttribute("disabled")
-                })
-
-                document.getElementById("myp-next").addEventListener("click", () => {
-                    updateMonthYear("next")
-                    if (offset == 0) {
-                        document.getElementById("myp-next").setAttribute("disabled", "disabled")
-                    }
-                })
+                 initializeMonthYearPicker();
+            } else if (el.detail.pathInfo.finalRequestPath == "/tab?tab=home") {
+                initializeMonthYearPicker();
             }
             // Reinitialize popover handlers after HTMX swaps
             initializePopoverHandlers();
@@ -141,7 +161,7 @@
         }
     }
 
-    function initializePopoverHandlers() {      
+    function initializePopoverHandlers() {
         // Remove existing click handler if any
         if (popoverClickHandler) {
             document.removeEventListener('click', popoverClickHandler);

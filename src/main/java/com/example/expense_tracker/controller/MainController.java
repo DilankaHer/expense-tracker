@@ -12,9 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.expense_tracker.dto.BudgetDto;
 import com.example.expense_tracker.entity.CategoryEntity;
 import com.example.expense_tracker.entity.SubCategoryEntity;
 import com.example.expense_tracker.entity.TransactionEntity;
+import com.example.expense_tracker.service.BudgetService;
 import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.SubCategoryService;
 import com.example.expense_tracker.service.TransactionService;
@@ -24,15 +26,20 @@ public class MainController {
     private final TransactionService transactionService;
     private final CategoryService categoryService;
     private final SubCategoryService subCategoryService;
+    private final BudgetService budgetService;
 
-    public MainController(TransactionService transactionService, CategoryService categoryService, SubCategoryService subCategoryService) {
+    public MainController(TransactionService transactionService, CategoryService categoryService, SubCategoryService subCategoryService, BudgetService budgetService) {
         this.transactionService = transactionService;
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
+        this.budgetService = budgetService;
     }
 
     @GetMapping("/")
     public String hello(Model model) {
+        model.addAttribute("path", "/budget");
+        model.addAttribute("target", "#budgetDisplay");
+        model.addAttribute("budget", this.budgetService.createBudgetDto(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
         return "index";
     }
 
@@ -50,8 +57,13 @@ public class MainController {
                 System.out.println(transactionsByDate);
                 model.addAttribute("transactionsByDate", transactionsByDate);
             }
+            model.addAttribute("path", "/transactions");
+            model.addAttribute("target", "#transactionsList");
             return "transactions";
         }
+        model.addAttribute("path", "/budget");
+        model.addAttribute("target", "#budgetDisplay");
+        model.addAttribute("budget", this.budgetService.createBudgetDto(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
         return "home";
     }
 

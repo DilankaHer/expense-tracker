@@ -33,7 +33,7 @@ public class TransactionService {
     @Transactional(readOnly = true)
     public List<TransactionEntity> getAllTransactions(String sortBy, @RequestParam(required = false) YearMonth yearMonth) {
         if (yearMonth != null) {
-            return this.transactionRepository.findAllByDateGreaterThanEqualAndDateLessThanEqual(yearMonth.atDay(1), yearMonth.atEndOfMonth(), Sort.by(Sort.Direction.DESC, sortBy));
+            return this.transactionRepository.findAllByDateGreaterThanEqualAndDateLessThanEqual(yearMonth.atDay(1), yearMonth.atEndOfMonth(), Sort.by(Sort.Direction.DESC, "date"));
         }
         if (sortBy == null) {
             return this.transactionRepository.findAll();
