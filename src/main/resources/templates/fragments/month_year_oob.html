@@ -1,0 +1,23 @@
+<!-- =========================
+     OOB: Transactions
+     ========================= -->
+<div th:fragment="transactionsOob(transactionsByDate)"
+     th:if="${tab == 'transactions'}"
+     hx-swap-oob="innerHTML:#transactionsList">
+
+    <th:block th:replace="~{fragments/transaction_list.html :: transactionsList(${transactionsByDate})}">
+    </th:block>
+
+</div>
+
+<!-- =========================
+     OOB: Budget
+     ========================= -->
+<div th:fragment="budgetOob(budget)"
+     th:if="${tab == 'home'}"
+     hx-swap-oob="innerHTML:#budgetDisplay">
+
+    <th:block th:replace="~{fragments/budget_display.html :: budgetDisplay(${budget})}">
+    </th:block>
+
+</div>

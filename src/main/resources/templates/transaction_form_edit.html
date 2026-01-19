@@ -1,8 +1,8 @@
 <div th:fragment="transactionFormEdit(transaction)"
     class="fixed inset-0 flex justify-center items-end md:items-end lg:items-center bg-secondary/90 dark:bg-darksecondary/90 z-[200]">
-    <div class="border rounded-none md:rounded-none lg:rounded-2xl p-6 md:p-3 lg:p-6 pb-2 md:pb-1 lg:pb-6 w-full max-w-xl md:max-w-sm lg:max-w-xl
+    <div class="border rounded-none md:rounded-none lg:rounded-2xl p-6 md:p-3 lg:p-6 pb-0 md:pb-0 lg:pb-0 w-full max-w-xl md:max-w-sm lg:max-w-xl
             bg-secondary dark:bg-darkformbg
-            relative z-[201] shadow-xl md:text-sm lg:text-base md:mb-0 lg:mb-auto">
+            relative z-[201] shadow-xl md:text-sm lg:text-base md:mb-0">
 
         <!-- Header -->
         <div class="mb-6 md:mb-3 lg:mb-6">
@@ -12,8 +12,11 @@
         </div>
 
         <form id="transactionForm" action="" hx-post="/editTransaction" hx-include="#myp-month, #myp-year"
-            hx-target="#transactionsList" hx-swap="innerHTML"
-            hx-on::after-request="document.getElementById('transactionFormDiv').innerHTML = ''">
+            hx-target="#transactionsList" hx-swap="innerHTML" hx-on::after-request="
+                if (event.detail.pathInfo.finalRequestPath === '/editTransaction') {
+                    document.getElementById('transactionFormDiv').innerHTML = '';
+                }
+            ">
             <input type="hidden" name="id" th:value="${transaction.id}">
             <div class="grid grid-cols-2 gap-4 md:gap-2 lg:gap-4">
 
@@ -101,27 +104,28 @@
         </form>
 
         <!-- Action Bar -->
-        <div class="border-t border-primary/40 mt-4 w-full">
-            <div class="flex items-center justify-center h-full">
-                <!-- Checkmark Button -->
-                <button type="button" onclick="document.getElementById('transactionForm').requestSubmit()"
-                    class="flex-1 flex items-center justify-center text-green-500
-                    hover:bg-secondary/50 dark:hover:bg-darksecondary/50
-                    transition">
-                    <div class="w-10 md:w-8">
+        <div class="mt-4 -mx-6 md:-mx-3 lg:-mx-6">
+            <!-- Horizontal Divider -->
+            <div class="border-t border-primary/40"></div>
+
+            <div class="flex items-stretch">
+                <!-- Confirm -->
+                <button type="button" onclick="document.getElementById('transactionForm').requestSubmit()" class="flex-1 py-2 md:py-1.5 lg:py-2
+                   flex items-center justify-center text-green-500
+                   hover:bg-secondary/50 dark:hover:bg-darksecondary/50 transition">
+                    <div class="w-8 lg:w-13">
                         <th:block th:replace="~{icons/general.html :: general-check}"></th:block>
                     </div>
                 </button>
-                
-                <!-- Vertical Separator -->
-                <div class="h-8 w-px bg-gray-400"></div>
-                
-                <!-- Close Button -->
-                <button type="button" onclick="document.getElementById('transactionFormDiv').innerHTML = ''"
-                    class="flex-1 flex items-center justify-center text-yellow-500
-                    hover:bg-secondary/50 dark:hover:bg-darksecondary/50
-                    transition">
-                    <div class="w-10 md:w-8">
+
+                <!-- Vertical Divider -->
+                <div class="w-px bg-gray-400"></div>
+
+                <!-- Cancel -->
+                <button type="button" onclick="document.getElementById('transactionFormDiv').innerHTML = ''" class="flex-1 py-2 md:py-1.5 lg:py-2
+                   flex items-center justify-center text-yellow-500
+                   hover:bg-secondary/50 dark:hover:bg-darksecondary/50 transition">
+                    <div class="w-8 lg:w-13">
                         <th:block th:replace="~{icons/general.html :: general-close}"></th:block>
                     </div>
                 </button>

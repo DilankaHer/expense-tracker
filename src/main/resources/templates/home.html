@@ -1,5 +1,5 @@
-<div class="flex flex-col gap-4 items-center justify-center" id="homeContent">
-    <div th:replace="~{fragments/month_year_picker.html :: monthYearPicker}"></div>
+<div class="flex flex-col gap-4 items-center justify-center mt-5" id="homeContent">
+    <!-- <div th:replace="~{fragments/month_year_picker.html :: monthYearPicker}"></div> -->
     <div id="budgetDisplay">
         <th:block th:replace="~{fragments/budget_display.html :: budgetDisplay(${budget})}"></th:block>
     </div>

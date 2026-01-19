@@ -67,6 +67,18 @@ public class MainController {
         return "home";
     }
 
+    @GetMapping("/changeMonth")
+    public String changeMonth(@RequestParam String tab, @RequestParam Integer month, @RequestParam Integer year, Model model) {
+        model.addAttribute("tab", tab);
+        if (tab.equals("transactions")) {
+            Map<String, List<TransactionEntity>> transactionsByDate = getTransactionsByDate(YearMonth.of(year, month));
+            model.addAttribute("transactionsByDate", transactionsByDate);
+            return "fragments/month_year_oob :: transactionsOob";
+        }
+        model.addAttribute("budget", this.budgetService.createBudgetDto(year, month));
+        return "fragments/month_year_oob :: budgetOob";
+    }
+
     @GetMapping("/categories")
     public String categories(Model model) {
         List<CategoryEntity> categories = this.categoryService.getAllCategories();
@@ -86,5 +98,11 @@ public class MainController {
         CategoryEntity category = new CategoryEntity(name, icon);
         model.addAttribute("category", category);
         return "fragments/selection_menu :: categorySelectionSingle";
+    }
+
+    private Map<String, List<TransactionEntity>> getTransactionsByDate(YearMonth yearMonth) {
+        List<TransactionEntity> transactions = this.transactionService.getAllTransactions("date", yearMonth);
+        return transactions.stream()
+            .collect(Collectors.groupingBy(TransactionEntity::getDateString, LinkedHashMap::new, Collectors.toList()));
     }
 }

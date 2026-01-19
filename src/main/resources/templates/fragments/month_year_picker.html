@@ -1,8 +1,8 @@
 <div th:fragment="monthYearPicker" class="max-w-sm mx-auto">
   <div class="flex items-center justify-between gap-6">
 
-    <button id="myp-prev" hx-include="#myp-month, #myp-year" th:hx-get="${path}" th:hx-target="${target}"
-      hx-swap="innerHTML" hx-on:click="prev()" class="p-2 rounded-full hover:bg-gray-100 transition font-bold text-xl">
+    <button id="myp-prev" hx-include="#myp-month, #myp-year, #myp-tab" hx-get="/changeMonth"
+      hx-swap="none" hx-on:click="prev()" class="p-2 rounded-full hover:bg-gray-100 transition font-bold text-xl">
       ‹
     </button>
 
@@ -10,10 +10,11 @@
       <div id="myp-month-year" class="text-xl font-semibold"></div>
       <input type="hidden" name="month" id="myp-month" value="">
       <input type="hidden" name="year" id="myp-year" value="">
+      <input type="hidden" name="tab" id="myp-tab" value="home">
     </div>
 
-    <button id="myp-next" hx-include="#myp-month, #myp-year" th:hx-get="${path}" th:hx-target="${target}"
-      hx-swap="innerHTML" hx-on:click="next()" class="p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-30 font-bold text-xl" disabled>
+    <button id="myp-next" hx-include="#myp-month, #myp-year, #myp-tab" hx-get="/changeMonth"
+      hx-swap="none" hx-on:click="next()" class="p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-30 font-bold text-xl" disabled>
       ›
     </button>
 

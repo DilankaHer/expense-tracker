@@ -1,6 +1,6 @@
 <div id="transactionsContent" class="flex flex-col gap-4 items-center">
     <div id="transactionFormDiv"></div>
-    <div th:replace="~{fragments/month_year_picker.html :: monthYearPicker}"></div>
+    <!-- <div th:replace="~{fragments/month_year_picker.html :: monthYearPicker}"></div> -->
     <div id="transactionsList">
         <th:block th:replace="~{fragments/transaction_list.html :: transactionsList(${transactionsByDate})}"></th:block>
     </div>
