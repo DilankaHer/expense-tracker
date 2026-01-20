@@ -19,7 +19,6 @@ services:
       SPRING_PROFILES_ACTIVE: prod
     depends_on:
       - db
-    restart: unless-stopped
 
 volumes:
   postgres_data:
